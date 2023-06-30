@@ -474,6 +474,7 @@ class Wis3D:
         boxes = []
         if axes is None:
             warnings.warn("Axes is not specified, use default axes rxyz. To preserve old behavior, use axes='sxyz'")
+            axes = "sxyz"
         for i in range(len(positions)):
             box_def = self.three_to_world @ affines.compose(
                 positions[i], euler.euler2mat(*eulers[i], axes), extents[i]
@@ -490,6 +491,18 @@ class Wis3D:
         filename = self.__get_export_file_name("boxes", name)
         with open(filename, "w") as f:
             f.write(json.dumps(boxes))
+
+
+    def add_3d_bbox(self, bbox, name=None):
+        '''
+        Args:
+            bbox: [x, y, z, x_len, y_len, z_len, yaw, ...]
+        '''
+        x, y, z, x_len, y_len, z_len, yaw = bbox[:7]
+        box_position = np.array([x, y, z])
+        box_euler = np.array([0, 0, yaw])
+        box_scale = np.array([x_len, y_len, z_len])
+        self.add_boxes(box_position, box_euler, box_scale, name=name)
 
     def add_lines(self, start_points: Union[np.ndarray, torch.Tensor], end_points: Union[np.ndarray, torch.Tensor], colors: Union[np.ndarray, torch.Tensor] = None, *, name: str = None
                   ) -> None:
