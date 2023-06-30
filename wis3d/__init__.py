@@ -25,10 +25,10 @@ def main():
         "--host", type=str, help="the hostname to run the service", default="0.0.0.0"
     )
     parser.add_argument(
-        "--port", type=int, help="the port to run the service", default=None
+        "--port", type=int, help="the port to run the service", default=19092
     )
     parser.add_argument(
-        "--verbose", default=False, action="store_true", help="log detailed info"
+        "--verbose", default=True, action="store_true", help="log detailed info"
     )
     args = parser.parse_args()
 

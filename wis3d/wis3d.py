@@ -20,7 +20,7 @@ import torch
 from transforms3d import affines, euler
 from termcolor import colored
 
-from wis3d.utils import random_choice
+# from wis3d.utils import random_choice
 
 file_exts = dict(
     point_cloud="ply",
@@ -77,8 +77,8 @@ class Wis3D:
 
     def __init__(
             self,
-            out_folder: str,
             sequence_name: str,
+            out_folder: str = None,
             xyz_pattern=None,
             auto_increase=True,
             auto_remove=True,
@@ -115,11 +115,13 @@ class Wis3D:
         self.enable = enable
         if enable is True:
             self.scene_id = 0
+            if out_folder is None:
+                out_folder = os.path.abspath(os.path.expanduser('~/vis_dir'))
             if not os.path.isabs(out_folder):
                 seq_out_folder = os.path.join(
                     os.getcwd(), out_folder, sequence_name)
             else:
-                seq_out_folder = out_folder
+                seq_out_folder = os.path.join(out_folder, sequence_name)
             if os.path.exists(seq_out_folder) and seq_out_folder not in Wis3D.has_removed and auto_remove:
                 shutil.rmtree(seq_out_folder)
                 Wis3D.has_removed.append(seq_out_folder)

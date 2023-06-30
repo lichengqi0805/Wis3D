@@ -7,7 +7,11 @@ import socket
 
 class Visualizer:
     def __init__(self, vis_dir: str, static_dir: str):
-        self.vis_dir = os.path.abspath(vis_dir)
+        if vis_dir:
+            self.vis_dir = os.path.abspath(vis_dir)
+        else:
+            self.vis_dir = os.path.abspath(os.path.expanduser('~/vis_dir'))
+            os.makedirs(self.vis_dir, exist_ok=True)
         self.static_dir = static_dir
 
     @cherrypy.expose
