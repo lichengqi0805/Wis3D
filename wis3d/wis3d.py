@@ -123,7 +123,10 @@ class Wis3D:
             else:
                 seq_out_folder = os.path.join(out_folder, sequence_name)
             if os.path.exists(seq_out_folder) and seq_out_folder not in Wis3D.has_removed and auto_remove:
-                shutil.rmtree(seq_out_folder)
+                try:
+                    shutil.rmtree(seq_out_folder)
+                except Exception as e:
+                    print(e)
                 Wis3D.has_removed.append(seq_out_folder)
             self.out_folder = out_folder
             self.sequence_name = sequence_name
@@ -493,7 +496,7 @@ class Wis3D:
             f.write(json.dumps(boxes))
 
 
-    def add_3d_bbox(self, bbox, name=None):
+    def add_3d_bbox(self, bbox, labels=None, name=None):
         '''
         Args:
             bbox: [x, y, z, x_len, y_len, z_len, yaw, ...]
@@ -502,7 +505,7 @@ class Wis3D:
         box_position = np.array([x, y, z])
         box_euler = np.array([0, 0, yaw])
         box_scale = np.array([x_len, y_len, z_len])
-        self.add_boxes(box_position, box_euler, box_scale, name=name)
+        self.add_boxes(box_position, box_euler, box_scale, labels=labels, name=name)
 
     def add_lines(self, start_points: Union[np.ndarray, torch.Tensor], end_points: Union[np.ndarray, torch.Tensor], colors: Union[np.ndarray, torch.Tensor] = None, *, name: str = None
                   ) -> None:
