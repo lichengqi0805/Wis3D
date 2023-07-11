@@ -48,6 +48,9 @@ const Home = memo(function Home() {
             setFrameIndex(length - 1);
         }
     });
+    const [showMessage, setShowMessage] = useState(false);
+    const [msgShowed, setMsgShowed] = useState("")
+
     useXHR(
         frames[frameIndex] && `${base}/files_in_scene?scene_path=${encodeURIComponent(frames[frameIndex])}`,
         "GET",
@@ -125,6 +128,11 @@ const Home = memo(function Home() {
                 if (val < frames.length - 1) return val + 1;
                 return val;
             });
+            setShowMessage(true);
+            setMsgShowed("Next frame");
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [frames]
     );
@@ -136,6 +144,11 @@ const Home = memo(function Home() {
                 if (val > 0) return val - 1;
                 return val;
             });
+            setShowMessage(true);
+            setMsgShowed("Previous frame");
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [frames]
     );
@@ -154,6 +167,11 @@ const Home = memo(function Home() {
                 query: {tab, sequence: seqs[index]}
             };
             router.push(url, url, {shallow: true});
+            setShowMessage(true);
+            setMsgShowed("Next sequence: " + seqName);
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [seqs, seqName]
     )
@@ -170,6 +188,11 @@ const Home = memo(function Home() {
                 query: {tab, sequence: seqs[index]}
             };
             router.push(url, url, {shallow: true});
+            setShowMessage(true);
+            setMsgShowed("Previous sequence: " + seqName);
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [seqs, seqName]
     )
@@ -192,6 +215,11 @@ const Home = memo(function Home() {
             setFrameIndex((val) => {
                 return 0;
             });
+            setShowMessage(true);
+            setMsgShowed("Jump to first frame");
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [frames]
     );
@@ -201,6 +229,11 @@ const Home = memo(function Home() {
             setFrameIndex((val) => {
                 return frames.length - 1;
             });
+            setShowMessage(true);
+            setMsgShowed("Jump to last frame");
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 1000);
         },
         [frames]
     );
@@ -311,6 +344,12 @@ const Home = memo(function Home() {
                         ))}
                 </Stack>
             </Stack>
+            {showMessage && (
+                <div className="control-message-box" style={{position: 'fixed', top: 10, left: '50%', transform: 'translateX(-50%)', padding: '10px', backgroundColor: '#f9f9f9', color: '#000000', borderRadius: '5px'}}>
+                   {msgShowed}
+                </div>
+            )
+            }
             {tab === "3d" && (
                 <>
                     <div className={classes.controlsWrapper} ref={levaPanelRef} onMouseDown={clickLevaPanel}
